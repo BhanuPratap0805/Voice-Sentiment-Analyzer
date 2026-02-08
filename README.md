@@ -8,6 +8,12 @@ A web application that analyzes voice sentiment from audio files using OpenAI's 
 - **Excitement Detection**: Identifies excitement based on joy and surprise levels.
 - **Visualizations**: Displays emotion distribution and timeline.
 
+## Tech Stack
+- **Backend**: Flask (Python)
+- **AI/ML**: OpenAI Whisper, Hugging Face Transformers, PyTorch
+- **Frontend**: HTML5, CSS3, JavaScript
+- **Deployment**: Docker, Gunicorn, Render
+
 ## Setup
 
 ### Using Docker (Recommended)
