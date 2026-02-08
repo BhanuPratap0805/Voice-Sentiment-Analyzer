@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentio &mdash; Voice Sentiment Analyzer</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+</head>
+<body>
+  <!-- Aurora Background -->
+  <div class="aurora-bg" aria-hidden="true">
+    <div class="aurora-blob blob-1"></div>
+    <div class="aurora-blob blob-2"></div>
+    <div class="aurora-blob blob-3"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>sentio</h1>
+      <p class="subtitle">Voice Sentiment Analyzer</p>
+    </header>
+
+    <!-- Upload Section -->
+    <section id="upload-section">
+      <div id="drop-zone" class="drop-zone">
+        <svg
+          width="48" height="48" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+          stroke-linejoin="round" class="upload-icon"
+        >
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+          <polyline points="17 8 12 3 7 8" />
+          <line x1="12" y1="3" x2="12" y2="15" />
+        </svg>
+        <p class="drop-text">Drop your audio file here</p>
+        <span class="drop-hint">or click to browse</span>
+        <span class="drop-formats">MP3, WAV, M4A, OGG &mdash; up to 50 MB</span>
+        <input type="file" id="file-input" accept="audio/*" hidden />
+      </div>
+
+      <div id="file-info" class="file-info hidden">
+        <span id="file-name"></span>
+        <span id="file-size"></span>
+        <button id="remove-file" class="btn-icon" title="Remove file">&times;</button>
+      </div>
+
+      <button id="analyze-btn" class="btn-primary" disabled>
+        Analyze Sentiment
+      </button>
+    </section>
+
+    <!-- Loading -->
+    <section id="loading" class="hidden">
+      <div class="spinner"></div>
+      <p class="loading-text">Analyzing your audio&hellip;</p>
+      <span class="loading-hint">This may take a moment depending on length</span>
+    </section>
+
+    <!-- Error -->
+    <div id="error-banner" class="error-banner hidden"></div>
+
+    <!-- Results -->
+    <section id="results" class="hidden">
+      <!-- Summary Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <span class="stat-label">Duration</span>
+          <span id="stat-duration" class="stat-value">&mdash;</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Segments</span>
+          <span id="stat-segments" class="stat-value">&mdash;</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Dominant</span>
+          <span id="stat-dominant" class="stat-value">&mdash;</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Changes</span>
+          <span id="stat-changes" class="stat-value">&mdash;</span>
+        </div>
+      </div>
+
+      <!-- Emotion Timeline -->
+      <div class="card">
+        <h2>Emotion Timeline</h2>
+        <div class="chart-wrap">
+          <canvas id="timeline-chart"></canvas>
+        </div>
+      </div>
+
+      <!-- Distribution + Changes -->
+      <div class="grid-2">
+        <div class="card">
+          <h2>Distribution</h2>
+          <div class="chart-wrap chart-wrap--sm">
+            <canvas id="distribution-chart"></canvas>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Emotion Changes</h2>
+          <div id="changes-list" class="changes-list"></div>
+        </div>
+      </div>
+
+      <!-- Transcript -->
+      <div class="card">
+        <h2>Transcript</h2>
+        <div id="transcript" class="transcript"></div>
+      </div>
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
