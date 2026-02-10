@@ -78,26 +78,29 @@ def _fmt(seconds: float) -> str:
 
 
 def _check_excitement(scores: dict[str, float]) -> tuple[bool, float]:
-    """Detect excitement from joy + surprise signals.
+    """Detect excitement from joy / surprise signals.
 
-    Uses relaxed thresholds so excitement actually surfaces in real audio:
-      - Both joy and surprise moderately present  (0.15 / 0.08)
-      - One strong + the other slightly present   (0.30 / 0.05)
-      - Very high joy alone (≥ 0.50) also counts as excited
+    The text emotion model almost never gives high joy AND surprise at
+    the same time.  So we treat these as excitement triggers:
+      - joy is the dominant emotion (score ≥ 0.25)
+      - joy + surprise combined ≥ 0.35
+      - surprise is dominant (score ≥ 0.35)
     """
     joy = scores.get("joy", 0)
     surprise = scores.get("surprise", 0)
+    combined = joy + surprise
+
+    # Find what the dominant emotion would be (excluding excitement logic)
+    dominant = max(scores, key=scores.get)
 
     excited = (
-        (joy >= 0.15 and surprise >= 0.08)
-        or (surprise >= 0.15 and joy >= 0.08)
-        or (joy >= 0.30 and surprise >= 0.05)
-        or (surprise >= 0.30 and joy >= 0.05)
-        or (joy >= 0.50)  # very high joy alone → excitement
+        (dominant == "joy" and joy >= 0.25)
+        or (dominant == "surprise" and surprise >= 0.35)
+        or (combined >= 0.35)
     )
     if excited:
-        conf = round(joy * 0.6 + surprise * 0.4, 3)
-        return True, max(conf, 0.15)  # floor so confidence isn't tiny
+        conf = round(max(combined, joy, surprise), 3)
+        return True, max(conf, 0.20)
     return False, 0.0
 
 
