@@ -3,6 +3,6 @@ openai-whisper
 transformers
 torch
 gunicorn
-streamlit
+streamlit>=1.33.0
 plotly
 pandas
